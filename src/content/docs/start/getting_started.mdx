@@ -6,6 +6,7 @@ perv: false
 ---
 
 import { Aside, Badge, FileTree, Tabs, TabItem, Steps } from '@astrojs/starlight/components';
+import HeadlessTabs from '~/components/HeadlessTabs.astro';
 
 ## Prerequisites
 <Aside type="tip">You will not need to install these prerequisites if you are not compiling it yourself!</Aside>
@@ -193,7 +194,7 @@ This will create a `ferrumc` executable in the `target/release` directory.
 
 ### Run
 
-<Tabs syncKey="os">
+<HeadlessTabs syncKey="os">
     <TabItem label="Linux">
         ~~~bash
         ./ferrumc
@@ -209,7 +210,7 @@ This will create a `ferrumc` executable in the `target/release` directory.
         .\ferrumc.exe
         ~~~
     </TabItem>
-</Tabs>
+</HeadlessTabs>
 
 You can change logging level by using ```--log=<level>```:
 ~~~bash
