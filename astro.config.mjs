@@ -4,6 +4,8 @@ import starlight from '@astrojs/starlight';
 
 // https://astro.build/config
 export default defineConfig({
+	site: 'https://ferrumc-rs.github.io',
+        base: 'docs',
 	integrations: [
 		starlight({
 			title: 'FerrumC Docs',
