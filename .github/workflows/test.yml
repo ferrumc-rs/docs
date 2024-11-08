@@ -42,8 +42,5 @@ jobs:
         run: bun install
         working-directory: ${{ env.BUILD_PATH }}
       - name: Build with Astro
-        run: |
-          bun run astro build \
-            --site "${{ steps.pages.outputs.origin }}" \
-            --base "${{ steps.pages.outputs.base_path }}"
+        run: bun run astro build
         working-directory: ${{ env.BUILD_PATH }}
