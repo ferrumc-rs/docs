@@ -127,7 +127,7 @@ Before starting, make sure you have the following prerequisites:
 ## Installation
 
 ### Option 1: Download Binary
-<Aside type="caution">You must have a GitHub account to use this method.</Aside>
+<Aside type="note">You must have a GitHub account to use this method.</Aside>
 <Steps>
 1. **Head over to FerrumC's [Github Actions page](https://github.com/ferrumc-rs/ferrumc/actions?query=branch%3Arewrite%2Fv3).**
 
@@ -179,7 +179,7 @@ This will create a `ferrumc` executable in the `target/release` directory.
             - ferrumc
 
         </FileTree>
-        <Aside>
+        <Aside type="tip">
             If you want to modify batch size (default 150), you can use
             ~~~bash
             ./ferrumc --import --batch_size=<num>
@@ -221,7 +221,7 @@ You can change logging level by using ```--log=<level>```:
     - warn (Only warnings)
     - error (Only errors)
 
-<Aside>
+<Aside type="tip">
     You can specify the directory to treat as the root directory (the place where the config files, data files, etc. live) by setting an environment variable `FERRUMC_ROOT` to the path of the directory.
     <Tabs syncKey="os">
         <TabItem label="Linux">
