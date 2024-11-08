@@ -29,6 +29,9 @@ export default defineConfig({
 				},
 			],
 			favicon: "/favicon.ico",
+			customCss: [
+				'src/style/theme.css',
+			],
 		}),
 	],
 });
