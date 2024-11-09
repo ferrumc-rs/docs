@@ -1,11 +1,14 @@
 ---
 import { Tabs } from '@astrojs/starlight/components';
 import type { ComponentProps } from 'astro/types';
+
 type Props = ComponentProps<typeof Tabs>;
 ---
+
 <div class="hide-tablist">
   <Tabs {...Astro.props}><slot /></Tabs>
 </div>
+
 <style>
 .hide-tablist :global(.tablist-wrapper) {
   display: none;
