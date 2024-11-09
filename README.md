@@ -1,6 +1,6 @@
 # FerrumC Documentation
 This is the public repository for our documentation.\
-You can access the docs [here](https://ferrumc-rs.github.io/docs).
+You can access the docs [here](https://docs.ferrumc.com/).
 
 ## Contributing
 Want to contribute? See the below guide.
