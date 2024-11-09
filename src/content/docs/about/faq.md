@@ -7,7 +7,7 @@ description: Frequently asked questions about FerrumC.
 Yes! It is not currently on our list of priorities, and it is very unlikely that we will be able to mirror Vanilla world generation 1:1. However, we do plan on implementing some form of terrain generation as soon as we can.
 
 ## What does 'FerrumC' mean?
-It's a play on words. Ferrum is the Lain word for iron and it ***rusts***. And MC (Minecraft) is in the end. So it becomes Ferru*mc*. Get it?
+It's a play on words. Ferrum is the Latin word for iron and it ***rusts***. And MC (Minecraft) is in the end. So it becomes Ferru*mc*. Get it?
 
 ## How does this project differ from:
 1. **[Valence](https://valence.rs/)**:\

@@ -1,9 +1,12 @@
 ---
 title: 🚀 Getting Started
 description: Quickly get up and running with FerrumC.
+
+perv: false
 ---
 
 import { Aside, Badge, FileTree, Tabs, TabItem, Steps } from '@astrojs/starlight/components';
+import HeadlessTabs from '~/components/HeadlessTabs.astro';
 
 ## Prerequisites
 <Aside type="tip">You will not need to install these prerequisites if you are not compiling it yourself!</Aside>
@@ -153,45 +156,105 @@ Before starting, make sure you have the following prerequisites:
 </Steps>
 This will create a `ferrumc` executable in the `target/release` directory.
 
-### Pre-Run
+## Pre-Run
 <Steps>
     1. **Move the FerrumC binary to your desired server directory**
     
     2. Select the **latest** successful workflow
 
     2. <Badge text="Optional" variant="note" /> **Generate a config file**
-        ~~~bash
-        ./ferrumc --setup
-        ~~~
+        <Tabs syncKey="os">
+            <TabItem label="Linux">
+                ~~~bash
+                ./ferrumc --setup
+                ~~~
+            </TabItem>
+            <TabItem label="macOS">
+                ~~~bash
+                ./ferrumc --setup
+                ~~~
+            </TabItem>
+            <TabItem label="Windows">
+                ~~~powershell
+                .\ferrumc.exe --setup
+                ~~~
+            </TabItem>
+        </Tabs>
 
     3. **Import an existing world**
 
         Place the region files (.mca) in the folder named import then run
-        ~~~bash
-        ./ferrumc --import
-        ~~~
+        <Tabs syncKey="os">
+            <TabItem label="Linux">
+                ~~~bash
+                ./ferrumc --import
+                ~~~
+            </TabItem>
+            <TabItem label="macOS">
+                ~~~bash
+                ./ferrumc --import
+                ~~~
+            </TabItem>
+            <TabItem label="Windows">
+                ~~~powershell
+                .\ferrumc.exe --import
+                ~~~
+            </TabItem>
+        </Tabs>
         The location of these files in minecraft is explained [here](https://minecraft.wiki/w/Region_file_format#Location)
-        <FileTree>
-
-            - import region files in here
-                - ...
-            - config.toml
-            - ferrumc
-
-        </FileTree>
+        <HeadlessTabs syncKey="os">
+            <TabItem label="Linux">
+                <FileTree>
+                    - import region files in here
+                        - ...
+                    - config.toml
+                    - ferrumc
+                </FileTree>
+            </TabItem>
+            <TabItem label="macOS">
+                <FileTree>
+                    - import region files in here
+                        - ...
+                    - config.toml
+                    - ferrumc
+                </FileTree>
+            </TabItem>
+            <TabItem label="Windows">
+                <FileTree>
+                    - import region files in here
+                        - ...
+                    - config.toml
+                    - ferrumc.exe
+                </FileTree>
+            </TabItem>
+        </HeadlessTabs>
         <Aside type="tip">
             If you want to modify batch size (default 150), you can use
-            ~~~bash
-            ./ferrumc --import --batch_size=<num>
-            ~~~
+            <HeadlessTabs syncKey="os">
+                <TabItem label="Linux">
+                    ~~~bash
+                    ./ferrumc --import --batch_size=<num>
+                    ~~~
+                </TabItem>
+                <TabItem label="macOS">
+                    ~~~bash
+                    ./ferrumc --import --batch_size=<num>
+                    ~~~
+                </TabItem>
+                <TabItem label="Windows">
+                    ~~~cmd
+                    .\ferrumc.exe --import --batch_size=<num>
+                    ~~~
+                </TabItem>
+            </HeadlessTabs>
             Basically the number of chunks to import at once, higher => faster but more CPU intensive.
             Max is 1024, since that's the max number of chunks in a region(.mca) file.
         </Aside>
 </Steps>
 
-### Run
+## Run
 
-<Tabs syncKey="os">
+<HeadlessTabs syncKey="os">
     <TabItem label="Linux">
         ~~~bash
         ./ferrumc
@@ -203,16 +266,30 @@ This will create a `ferrumc` executable in the `target/release` directory.
         ~~~
     </TabItem>
     <TabItem label="Windows">
-        ~~~bash
+        ~~~cmd
         .\ferrumc.exe
         ~~~
     </TabItem>
-</Tabs>
+</HeadlessTabs>
 
 You can change logging level by using ```--log=<level>```:
-~~~bash
-./ferrumc --log=info #for info level logging
-~~~
+<Tabs syncKey="os">
+    <TabItem label="Linux">
+        ~~~bash
+        ./ferrumc --log=info #for info level logging
+        ~~~
+    </TabItem>
+    <TabItem label="macOS">
+        ~~~bash
+        ./ferrumc --log=info #for info level logging
+        ~~~
+    </TabItem>
+    <TabItem label="Windows">
+        ~~~cmd
+        .\ferrumc.exe --log=info #for info level logging
+        ~~~
+    </TabItem>
+</Tabs>
 
 ###### Logging values:
     - trace (Extremely verbose)
@@ -229,7 +306,7 @@ You can change logging level by using ```--log=<level>```:
             export FERRUMC_ROOT=/home/YourUser/Documents/Code/Rust/ferrumc
             ~~~
         </TabItem>
-<TabItem label="macOS">
+        <TabItem label="macOS">
             ~~~bash
             export FERRUMC_ROOT=/home/YourUser/Documents/Code/Rust/ferrumc
             ~~~
