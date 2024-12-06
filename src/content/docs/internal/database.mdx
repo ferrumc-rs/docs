@@ -1,0 +1,37 @@
+---
+title: Database
+description: Docs for the database system in FerrumC.
+---
+
+FerrumC uses the LMDB database for storing data in a key-value format, allowing for fast and efficient data storage and
+retrieval. Currently, this is used exclusively for storing chunks, but in the future this will be expanded to store other
+data such as player data and entities.
+
+There are several layers of abstraction in place to make working with the database easier. <br/>
+Firstly there are some functions in `/src/lib/storage/src/lmdb.rs` that vastly simplify the process of interacting with
+the database. These function provide a simple interface for reading and writing data to the database through the use of
+functions such as `get()`, `insert()`, `delete()`, and `update()`, etc. Most of these functions work with a 128-bit key,
+a table name as a string and an array of bytes as the value. <br/>
+Inside most of these functions, tokio is used to spawn a blocking task, relegating the non-async database operations to
+a separate task to prevent blocking the main thread. This is done by using the `tokio::task::spawn_blocking()` function.
+This does require some ownership shenanigans, hence the Env being wrapped in an Arc and cloned before entering the
+blocking task. <br/>
+These functions can be used by anything, but does offer a fairly primitive interface. Code needing to interact with the
+database should have their own wrappers for handling things like caching or serializing/deserializing data.
+
+There is a second layer of abstract for chunks, found in `/src/lib/world/src/db_functions.rs`. These functions are
+specifically for handling chunk data, and provide a more high-level interface for working with chunks.
+These functions handle caching, serializing/deserializing, and converting coordinates and the dimension name into a key.
+
+The specifics of caching are covered in a separate section, but the general idea is that chunks are stored in a cache
+any time they are read or written, and are removed from the cache when a time or size cap is hit. <br/>
+Serializing is currently done using the [bitcode](https://crates.io/crates/bitcode/) crate, which is a simple and
+performant way to serialize and deserialize data. This is used to serialize the chunk data into a byte array, which is
+then stored in the database, using the aforementioned primitive functions. There is also a compression step used to
+decrease the amount of disk space a world takes up<br/>
+Generating the key is done in the `create_key()` function, which takes a dimension name, an x coordinate and a z
+coordinate and produces a 128-bit key. This key is then used to interact with the database. This key is created by first
+hashing the dimension name with [wyhash](https://crates.io/crates/wyhash) and shifting the 64 bit digest into a 128-bit
+key as the first 32 bits. The x and z coordinates are then widened to 48-bit integers and shifted into the remaining
+96 bits. This ensures that the dimension name has sufficient a keyspace to not risk hash collisions with many dimensions
+and the x and z coordinates can be sufficiently large to not limit the world size.<br/>

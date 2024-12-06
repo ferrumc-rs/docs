@@ -183,7 +183,8 @@ This will create a `ferrumc` executable in the `target/release` directory.
 
     3. **Import an existing world**
 
-        Place the region files (.mca) in the folder named import then run
+        Copy the world's files into the `import` directory in the FerrumC directory. This should leave you with some
+        folders such as "region", "data" and "entities" directly inside the `import` directory.
         <Tabs syncKey="os">
             <TabItem label="Linux">
                 ~~~bash
@@ -213,7 +214,7 @@ This will create a `ferrumc` executable in the `target/release` directory.
             </TabItem>
             <TabItem label="macOS">
                 <FileTree>
-                    - import region files in here
+                    - import world files in here
                         - ...
                     - config.toml
                     - ferrumc
@@ -221,7 +222,7 @@ This will create a `ferrumc` executable in the `target/release` directory.
             </TabItem>
             <TabItem label="Windows">
                 <FileTree>
-                    - import region files in here
+                    - import world files in here
                         - ...
                     - config.toml
                     - ferrumc.exe
@@ -266,7 +267,7 @@ This will create a `ferrumc` executable in the `target/release` directory.
         ~~~
     </TabItem>
     <TabItem label="Windows">
-        ~~~cmd
+        ~~~bash
         .\ferrumc.exe
         ~~~
     </TabItem>
@@ -285,7 +286,7 @@ You can change logging level by using ```--log=<level>```:
         ~~~
     </TabItem>
     <TabItem label="Windows">
-        ~~~cmd
+        ~~~bash
         .\ferrumc.exe --log=info #for info level logging
         ~~~
     </TabItem>
@@ -297,28 +298,6 @@ You can change logging level by using ```--log=<level>```:
     - info (Recommended, useful information)
     - warn (Only warnings)
     - error (Only errors)
-
-<Aside type="tip">
-    You can specify the directory to treat as the root directory (the place where the config files, data files, etc. live) by setting an environment variable `FERRUMC_ROOT` to the path of the directory.
-    <Tabs syncKey="os">
-        <TabItem label="Linux">
-            ~~~bash
-            export FERRUMC_ROOT=/home/YourUser/Documents/Code/Rust/ferrumc
-            ~~~
-        </TabItem>
-        <TabItem label="macOS">
-            ~~~bash
-            export FERRUMC_ROOT=/home/YourUser/Documents/Code/Rust/ferrumc
-            ~~~
-        </TabItem>
-        <TabItem label="Windows">
-            ~~~cmd
-            set FERRUMC_ROOT=C:\Users\YourUser\Documents\Code\Rust\ferrumc
-            ~~~
-        </TabItem>
-    </Tabs>
-    This is useful if you can't move the place the binary is executed from (`cargo run` for example).
-</Aside>
 
 
 

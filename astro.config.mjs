@@ -27,6 +27,13 @@ export default defineConfig({
 						{label: 'Comparison', slug: 'about/comparison'},
 					],
 				},
+				{
+					label: "Internal Documentation",
+					items: [
+						{label: 'Getting Started', slug: 'internal/getting_started'},
+                        {label: 'Database', slug: 'internal/database'},
+					],
+				}
 			],
 			favicon: "/favicon.ico",
 			customCss: [
