@@ -7,7 +7,7 @@ Want to contribute? See the below guide.
 
 1. [Fork the repository](https://github.com/ferrumc-rs/docs/fork) and then clone it.
 ```bash
-git clone https://github.com/user/docs
+git clone https://github.com/ferrumc-rs/docs
 ```
 
 2. Open a terminal in the new cloned repository folder and run `npm install`. This will install necessary dependencies.
