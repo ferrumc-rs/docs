@@ -1,0 +1,43 @@
+---
+title: Caching
+description: Docs for the chunk caching system in FerrumC.
+---
+
+FerrumC uses a caching system to ensure that chunk loading is as fast as possible, since that is one of the noticeable
+performance bottlenecks in Minecraft servers. However, the major bottleneck in sending chunks to client is the network
+delay which can't really be fixed, so we try to focus on reducing the load on the rest of the server and maintaining low
+memory usage.
+
+FerrumC uses the [moka](https://crates.io/crates/moka) crate to provide a tried and tested caching system. This crate
+provides both a sync and async cache, but FerrumC uses the async cache to prevent blocking the main thread. The general
+premise of caching is that it can store chunks in memory, reducing the amount of time spent reading chunks from the much
+slower disk storage.
+
+The cache is a simple key-value store, where the key is a 128-bit integer and the value is a `Chunk` struct. The key is
+generated from the dimension name, x coordinate and z coordinate of the chunk, the specifics of which are covered in the
+[database section](./database). This key is then used to interact with the cache, where the cache will return an
+`Option<Chunk>` when a chunk is requested. If the chunk is not in the cache, the cache will return `None`, and the chunk
+will need to be read from the database.
+
+All of this is handled automatically by the abstractions in `/src/lib/world/src/db_functions.rs`. These functions generally
+contain 2 parts: a crate-level internal function that fetches directly from the database, and a public function that fetches
+from the cache, falling back to the internal functions if the chunk can't be found. The public function will first check
+the cache for the chunk, and if it is not found, it will call the internal function to fetch the chunk from the database.
+
+FerrumC uses a very aggressive, simple caching system; any time a chunk is read or written, it is stored in the cache.
+This includes when a chunk is generated, loaded from disk, or modified. This means that the cache will often have a lot
+of unneeded chunks in it, but this results in very few cache misses for chunks that are frequently accessed.
+
+The cache is also limited in size, both by time and by the number of chunks. The cache will remove the oldest chunks
+when the cache reaches a certain size, and will also remove chunks when they have been in the cache for a certain amount
+without being accessed. For example if we set the cache capacity to 20mb and the TTL to 60 seconds (these are the defaults),
+the cache will remove the oldest chunks when the cache reaches 20mb, and will also remove chunks that have been in the cache
+for 60 seconds without being accessed. This means there is a hard cap of 20mb on the cache, and that chunks that are not
+frequently accessed will be removed from the cache to prevent unnecessary memory usage.
+
+Setting the TTL higher will allow the cache to store chunks for longer, but will also mean the chunk's idle memory usage
+will go down slower. This results in chunks being able to not be accessed for a longer time before being removed from the
+cache, but also means that the cache will use more memory. <br/>
+Setting the cache capacity higher will allow the cache to store more chunks, but will also mean that the cache will use more
+memory. Setting this higher is useful if you have many players online at once, as it will allow the cache to store more chunks
+and reduce the amount of time spent reading chunks from disk.
