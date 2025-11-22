@@ -7,10 +7,18 @@ export default defineConfig({
   integrations: [
     starlight({
       title: "FerrumC Docs",
-      social: {
-        discord: "https://discord.gg/qT5J8EMjwk",
-        github: "https://github.com/ferrumc-rs/ferrumc",
-      },
+      social: [
+        {
+          icon: "discord",
+          label: "Discord",
+          href: "https://discord.gg/qT5J8EMjwk",
+        },
+        {
+          icon: "github",
+          label: "Git",
+          href: "https://github.com/ferrumc-rs/ferrumc",
+        },
+      ],
       sidebar: [
         {
           label: "Start Here",
