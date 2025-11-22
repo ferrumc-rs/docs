@@ -43,6 +43,12 @@ export default defineConfig({
             { label: "Caching", slug: "internal/caching" },
           ],
         },
+        {
+          label: "APIs",
+          items: [
+            { label: "Commands", slug: "api/commands" }
+          ]
+        }
       ],
       favicon: "/favicon.ico",
       customCss: ["src/style/theme.css"],

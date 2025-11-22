@@ -1,0 +1,228 @@
+---
+title: Commands
+description: A tutorial on the command API
+---
+
+FerrumC features its own macro-based command API. This page explains how you use it.
+
+## Your first command
+
+To create a command, simply create a function and add the `#[command("...")]` attribute
+to it:
+
+```rs
+#[command("hello")]
+fn hello() {
+    println!("/hello was invoked!");
+}
+```
+
+## Command senders
+
+A command sender can either be a player or the console (currently not implemented).
+The `#[command]` macro allows you to get the sender by adding a function parameter
+with the `CommandSender` type and marking it with the `#[sender]` attribute:
+
+```rs
+#[command("hello")]
+fn hello(#[sender] sender: CommandSender) {
+    sender.send_message(TextComponent::from("Hello!"), false);
+}
+```
+
+## Arguments
+
+Arguments can be passed in as a function argument marked with the `#[arg]` attribute.
+The argument you are accepting must implement the `CommandArgument` trait (see below).
+
+```rs
+#[command("hello")]
+fn hello(#[sender] sender: CommandSender, #[arg] name: GreedyString) {
+    sender.send_message(TextComponent::from(format!("Hello to {name}!")), false);
+}
+```
+
+<details>
+    <summary>All integrated argument types</summary>
+
+    - `bool`
+    - `char`
+    - `Float(f32)`
+    - `Integer<MIN = i32::MIN, MAX = i32::MAX>(i32)`
+    - `Long<MIN = i64::MIN, MAX = i64::MAX>(i64)`
+    - `SingleWord(String)`
+    - `QuotableString(String)`
+    - `GreedyString(String)`
+    - `Duration` (`std::time::Duration`)
+    - `GameMode`
+</details>
+
+### Your own arguments
+
+To create your own argument, you will need to implement the `CommandArgument` trait
+for either your type directly (if applicable) or to a wrapper type.
+
+#### Parsing
+
+The `CommandArgument` trait requires you to implement 
+`fn parse(&mut CommandContext) -> ParserResult<Self>`. The given command context
+allows you to parse the user's input. 
+
+The most important operation is **reading** from the input. This will read an amount
+of characters, consume them and return them.
+
+The most basic way of doing this is with `ctx.input.read(n)`, n being the amount of
+characters you are trying to read.
+You can also use `ctx.input.read_string()` to read the next full word from the
+remaining input.
+
+Keep in mind that these strings can be empty if there is no remaining input left!
+You can directly check whether there is any input remaining with `ctx.input.has_remaining_input()`.
+
+Another important operation is **peeking**. Peeking works exactly like reading, just
+that it does **not consume** the input that was peeked. This means that the cursor
+will never move when peeking.
+
+You can peek one character with `ctx.input.peek()` and multiple characters with
+`ctx.input.peek_string_chars(n)`, and the next word with `ctx.input.peek_string()`.
+
+
+For example, this is how the `SingleWord` argument type is parsed:
+
+```rs
+impl CommandArgument for SingleWord {
+    fn parse(ctx: &mut CommandContext) -> ParserResult<Self> {
+        let word = ctx.input.read_string();
+
+        if word.is_empty() {
+            return Err(parser_error("string must not be empty"));
+        }
+
+        Ok(SingleWord(word))
+    }
+
+    // ...
+}
+```
+
+#### Suggesting
+
+Command suggestions require you to implement
+`fn suggest(&mut CommandContext) -> Vec<Suggestion>`.
+By default, this consumes one word from the input and does not suggest anything.
+
+Suggesting **requires** you to consume the input in the same way as when parsing.
+
+Suggestions can be created using `Suggestion::of` when not using a tooltip, and
+with the `Suggestion { ... }` constructor when using a tooltip.
+
+**Suggestions are always filtered based on the command input already.**
+
+#### Primitive argument types
+
+Vanilla Minecraft contains several primitive argument types by default. This
+tells the client how to handle parsing the argument on the client-side, which
+includes red highlighting when for example entering a string on an integer
+argument. This is specified with the `PrimitiveArgumentType` enum. Creating
+your own argument requires you to provide this with the `fn primitive()`
+function.
+
+<details>
+    <summary>Show all primitive argument types</summary>
+
+    - Bool
+    - Float
+    - Double
+    - Int
+    - Long
+    - String
+    - Entity
+    - GameProfile
+    - BlockPos
+    - ColumnPos
+    - Vec3
+    - Vec2
+    - BlockState
+    - BlockPredicate
+    - ItemStack
+    - ItemPredicate
+    - Color
+    - Component
+    - Style
+    - Message
+    - Nbt
+    - NbtTag
+    - NbtPath
+    - Objective
+    - ObjectiveCriteria
+    - Operator
+    - Particle
+    - Angle
+    - Rotation
+    - ScoreboardDisplaySlot
+    - ScoreHolder
+    - UpTo3Axes
+    - Team
+    - ItemSlot
+    - ResourceLocation
+    - Function
+    - EntityAnchor
+    - IntRange
+    - FloatRange
+    - Dimension
+    - GameMode
+    - Time
+    - ResourceOrTag
+    - ResourceOrTagKey
+    - Resource
+    - ResourceKey
+    - TemplateMirror
+    - TemplateRotation
+    - Heightmap
+    - UUID
+</details>
+
+Finally, here is an example of implementing your own argument
+that wraps a quotable string and suggests options:
+
+```rs
+struct TestArg(String);
+
+impl CommandArgument for TestArg {
+    fn parse(ctx: &mut CommandContext) -> ParserResult<Self> {
+        Ok(Self(ctx.input.read_string()))
+    }
+
+    fn primitive() -> PrimitiveArgument {
+        PrimitiveArgument::quotable()
+    }
+
+    fn suggest(ctx: &mut CommandContext) -> Vec<Suggestion> {
+        ctx.input.read_string();
+
+        vec![
+            Suggestion::of("egg"),
+            Suggestion::of("cheese"),
+            Suggestion::of("fish"),
+            Suggestion::of("\"chicken nuggets\"")
+        ]
+    }
+}
+```
+
+## Subcommands
+
+You can easily declare subcommands by simply using the
+full name in the `#[command("...")]` macro:
+
+```rs
+#[command("test")]
+fn hello() {
+    println!("/test was invoked!");
+}
+
+#[command("test sub")]
+fn hello() {
+    println!("/test sub was invoked!");
+}
+```
